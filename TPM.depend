@@ -1,1 +1,6 @@
 # depslib dependency file v1.0
+1776143755 source:c:\users\ryzen\onedrive\documentos\facultad\teoria de la info y compu\tpm\main.c
+	<stdio.h>
+	<stdlib.h>
+	<math.h>
+
