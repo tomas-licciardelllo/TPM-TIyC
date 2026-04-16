@@ -7,45 +7,133 @@ int imprimirB(unsigned char c)
     for(i = 7; i >= 0;  i --)
     {
         printf("%d", (c >> i) & 1);
+
     }
+printf("\n");
 }
+
+
 
 
 int* Hamming(int cadena[], int modulo, int limite)
 {
-    int i,suma;
-    int n;
-    int m = 0;
+    int *cadena_h = malloc(1*sizeof(int));
+    cadena_h[0]=0;
+    int n=1;
+    int indice = 1;
+    int arr = 1;
+    int i = 1;
+    int contador = 1;
+    while(contador<limite)
+    {
+        while(indice<=modulo)
+        {
+            if((indice & (indice - 1))== 0)
+            {
+                arr++;
+                cadena_h = realloc(cadena_h, arr * sizeof(int));
+                cadena_h[n] = 2;
+            }
+            else
+            {
+                arr++;
+                cadena_h = realloc(cadena_h, arr * sizeof(int));
+                cadena_h[n] = cadena[i];
+                i++;
+                contador++;
+            }
+            indice++;
+            n++;
+        }
+        indice=1;
+    }
+    return cadena_h;
+}
+
+/*int* Hamming(int cadena[], int modulo, int limite)
+{
+    int *cadena_H = malloc(1 *sizeof(int));
+    int arr = 1;
+    cadena_H[0] = 0;
+    int i,suma=0;
+    int n=1;
+    int m = 1;
+    int indice = 1;
+    int cantidad=0;
+    switch(modulo)
+    {
+        case 8:
+            cantidad = 4;
+        break;
+        case 1024:
+            cantidad = 1013;
+        break;
+        case 16384:
+            cantidad = 16369;
+        break;
+    }
+    int check = 0;
+    int p=0;
     while(limite!= m)
     {
-        printf("Entro");
+        printf("Entro\n");
         for(i=1; i<=modulo; i ++)
         {
             if((i & (i-1)) == 0)
             {
-                for(n=i; n<=modulo; n++)
+                p=i;
+                /*for(n=i; n<=cantidad; n++)
                 {
-                    if((n & (n-1) != 0) && ((n & i)>>(int)log2(i)))
+                    check = (check << (int)log2(i)) | 1;
+                    if((n & (n-1) != 0) && (p & i))
                    {
                         suma += cadena[n];
-                        m++;
                    }
+                   p++;
                 }
-                m++;
+                n=indice;
+                while(n<=cantidad)
+                {
+                    if((p&i) && ((p & (p-1)) != 0))
+                    {
+                        suma +=cadena[n];
+                        n++;
+                    }
+                    else
+                    {
+                        if((p&i)==0 && ((p & (p-1)) != 0))
+                        {
+                            n++;
+                        }
+                    }
+                    p++;
+                }
                 if(suma % 2 == 0)
                 {
-                     cadena[i] = suma;
+                     indice++;
+                     cadena_H = realloc(cadena_H,arr *sizeof(int));
+                     cadena_H[i] = suma;
+
                 }
                 else
                 {
-                    cadena[i] = suma + 1;
+                    indice++;
+                     cadena_H = realloc(cadena_H,arr *sizeof(int));
+                     cadena_H[i] = suma + 1;
                 }
+                suma = 0;
+            }
+            else
+            {
+                indice++;
+                cadena_H = realloc(cadena_H,arr *sizeof(int));
+                cadena_H[i] = cadena[i];
+                m++;
             }
         }
-
     }
-    return cadena;
-}
+    return cadena_H;
+}*/
 
 
 
@@ -126,7 +214,7 @@ int main()
 
     int salir = 0;
 
-    i =0;
+   /* i =0;
     printf("MOSTRAME ESTO %d\n",n);
     while(i<n)
     {
@@ -134,11 +222,19 @@ int main()
       i++;
     }
     printf("\n");
-    //Hamming(chain,8,n);
+    */
+    int *cadena_H = Hamming(chain,8,n);
+    i =0;
+    while(i<17)
+    {
+        printf("%d", cadena_H[i]);
+        i++;
+    }
+    printf("\n AVER Q ONDA");
     while(salir == 0){
 
 
-        printf("%d \n",(int)log2(32));
+        //printf("%d \n",(int)log2(32));
 
         printf("Ingrese una opcion\n");
         printf("[1] Leer archivo txt\n");
