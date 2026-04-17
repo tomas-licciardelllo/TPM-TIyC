@@ -24,6 +24,8 @@ int* Hamming(int cadena[], int modulo, int limite)
     int arr = 1;
     int i = 1;
     int contador = 1;
+    int suma=0;
+    int suma_total = 0;
     while(contador<limite)
     {
         while(indice<=modulo)
@@ -46,6 +48,64 @@ int* Hamming(int cadena[], int modulo, int limite)
             n++;
         }
         indice=1;
+    }
+    int x = 1;
+    int aux;
+    contador = 1;
+    int ind_H=1;
+    int ind_p = 1;
+    while(contador < arr)
+    {
+        while(indice < modulo)
+        {
+            if((indice & (indice - 1))== 0)
+            {
+                n = indice;
+                aux  = ind_H;
+                while(n<modulo)
+                {
+                    if(((indice & n) == indice) && ((n & (n-1))!= 0))
+                    {
+                        suma += cadena_h[ind_H];
+                    }
+                    ind_H++;
+                    n++;
+                }
+                ind_H = aux;
+                if(suma % 2 == 0)
+                {
+                    cadena_h[ind_H] = 0;
+                }
+                else
+                {
+                    cadena_h[ind_H] = 1;
+                }
+                ind_p = ind_p * 2;
+                suma = 0;
+            }
+            indice++;
+            contador++;
+            ind_H++;
+        }
+        ind_p = 1;
+        x = (ind_H - modulo) + 1;
+        while(x<ind_H)
+        {
+            suma_total+=cadena_h[x];
+            x++;
+        }
+         if(suma_total % 2 == 0)
+        {
+            cadena_h[ind_H] = 0;
+        }
+        else
+        {
+            cadena_h[ind_H] = 1;
+        }
+        suma_total=0;
+        indice = 1;
+        ind_H++;
+        contador++;
     }
     return cadena_h;
 }
@@ -227,7 +287,12 @@ int main()
     i =0;
     while(i<17)
     {
+
         printf("%d", cadena_H[i]);
+        if(i == 8)
+        {
+            printf("|||");
+        }
         i++;
     }
     printf("\n AVER Q ONDA");
