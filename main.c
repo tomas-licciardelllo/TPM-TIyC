@@ -313,7 +313,7 @@ int main() {
     }
     printf("\n Errores %d\n",errores);
 
-    generarArchivoDEX(cadena_H, 8, largo_h, "archivo_con_error.DEX");
+    generarArchivoDEX(cadena_H, 8, largo_h, "archivo_con_error.txt");
     info_recuperada = decodificarHamming(cadena_H, 8, largo_h, &largo_info);
     printf("\n---Informacion Recuperada: ----\n");
         for(i = 0; i < largo_info; i++)
