@@ -221,17 +221,23 @@ int* decodificarHamming(int cadena_H[], int modulo, int largo_total, int *largo_
 void generarArchivoDEX(int *cadena_H, int modulo, int largo_total, char *nombre_salida) {
     int k, pos_en_bloque, bit_count = 0;
     unsigned char caracter = 0;
-    int tamano_bloque = modulo + 1;
+    int tamano_bloque = modulo;
 
     FILE *out = fopen(nombre_salida, "wb");
     if (out == NULL) return;
 
     for (k = 1; k < largo_total; k++) {
         pos_en_bloque = ((k - 1) % tamano_bloque) + 1;
-        if (pos_en_bloque <= modulo && (pos_en_bloque & (pos_en_bloque - 1)) != 0) {
-            if (cadena_H[k] == 1) caracter |= (1 << (7 - bit_count));
+        if ((pos_en_bloque & (pos_en_bloque - 1)) != 0) //filtro todas las potencias de dos
+            {
+
+         //extraigo el bit, ignorando los placeholder que son 2
+            if (cadena_H[k] == 1) {
+                caracter |= (1 << (7 - bit_count));
+            }
             bit_count++;
 
+            /* Cuando juntamos 8 bits de datos, escribimos el byte */
             if (bit_count == 8) {
                 fputc(caracter, out);
                 caracter = 0;
@@ -242,7 +248,34 @@ void generarArchivoDEX(int *cadena_H, int modulo, int largo_total, char *nombre_
     fclose(out);
     printf("\nArchivo %s generado exitosamente.\n", nombre_salida);
 }
-
+void guardarInfoRecuperada(int *info_recuperada, int largo_info, char *nombre_archivo) {
+    int i, bit_count;
+    unsigned char caracter;
+    FILE *arch = fopen(nombre_archivo, "wb");
+    if (arch == NULL)
+    {
+        printf("Error al crear el archivo\n");
+        return;
+    }
+    bit_count = 0;
+    caracter = 0;
+    for (i = 0; i < largo_info; i++)
+    {
+            if (info_recuperada[i] == 1)
+                {
+                caracter |= (1 << (7 - bit_count));
+                }
+        bit_count++;
+                if (bit_count == 8)
+                {
+                fputc(caracter, arch);
+                caracter = 0;
+                bit_count = 0;
+                }
+    }
+    fclose(arch);
+    printf("\nArchivo '%s' generado exitosamente\n", nombre_archivo);
+}
 int main() {
     int *chain = malloc(1 * sizeof(int));
     int i, n = 1, t, caracter, largo_h, largo_info;
@@ -279,9 +312,8 @@ int main() {
         printf("%d", cadena_H[i]);
     }
     printf("\n Errores %d\n",errores);
-    generarArchivoDEX(cadena_H, 8, largo_h, "archivo.DEX");
 
-
+    generarArchivoDEX(cadena_H, 8, largo_h, "archivo_con_error.DEX");
     info_recuperada = decodificarHamming(cadena_H, 8, largo_h, &largo_info);
     printf("\n---Informacion Recuperada: ----\n");
         for(i = 0; i < largo_info; i++)
@@ -289,6 +321,7 @@ int main() {
             printf("%d", info_recuperada[i]);
         }
         printf("\n");
+        guardarInfoRecuperada(info_recuperada, largo_info, "recuperado.txt");
         free(info_recuperada);
     free(chain);
     free(cadena_H);
