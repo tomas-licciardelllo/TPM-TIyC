@@ -205,10 +205,22 @@ void comprimirArchivo(const char *entrada, const char *salida) {
                 break;
         }
     }
-    printf("'%c'  freq=%lu  =>  %s\n",
+   printf("'%c'  freq=%lu  =>  %s\n",
            (c >= 32 && c < 127) ? c : '?', // el signo de pregunta son para los caracteres que tienen acento o no estan el rango de 32 y 127 en ASCII
            freq,
            codigos.items[i].codigo);
+
+   /*
+
+        SE PUEDE USAR ESTE BLOQUE COMO UNA ALTERNATIVA PARA MOSTRAR LOS CARACTERES QUE SON DE MAS DE 8 BITS
+
+
+        printf("'%c' (0x%02X) freq=%lu  =>  %s\n",
+       (c >= 32 && c < 127) ? c : '.',
+        c,
+        freq,
+        codigos.items[i].codigo);
+    */
 }
     FILE *fin = fopen(entrada, "rb");
     FILE *fout = fopen(salida, "wb");
